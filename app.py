@@ -50,33 +50,30 @@ def create_figure(df, geojson):
         }
     )
     fig.update_layout(
+        plot_bgcolor=colors['background'],
+        paper_bgcolor=colors['background'],
+        font_color=colors['text'],
         showlegend=False,
-        height=550,
+        height=690,
         clickmode='event+select',
-        mapbox_style="satellite",
+        mapbox_style="dark",
         mapbox_accesstoken=mapbox_token,
-        margin=dict(l=0, r=0, t=0, b=0))
+        margin=dict(l=10, r=10, t=25, b=0))
 
-    fig.update_traces(marker=dict(line=dict(color='black')))
+    fig.update_traces(marker=dict(line=dict(color='grey')))
+
     return fig
 
 app.layout=html.Div(
     [
-        html.Br(),
         html.Div(id="page-content"),
-        dbc.Row(html.H3('Arthur Systems'), justify='center'),
+        dcc.Graph(
+            id='map',
+            figure=empty_figure()
+            ),
         html.Br(),
-        dbc.Container(
-            [
-                dcc.Graph(
-                    id='map',
-                    figure=empty_figure()
-                    ),
-                html.Br(),
-                dbc.Row(html.H3(id='surface'), justify='center'),
-                # html.Pre(id='test'),
-            ]
-        ),
+        dbc.Row(html.H3(id='surface'), justify='center'),
+        # html.Pre(id='test'),
     ]
 )
 
