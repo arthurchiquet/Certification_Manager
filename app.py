@@ -6,7 +6,6 @@ from server import app
 from layouts import nav
 
 
-
 app.layout = html.Div(
     children=
         [
