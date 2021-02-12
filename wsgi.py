@@ -1,3 +1,3 @@
-from run import app
+from server import app
 
 application = app.server
