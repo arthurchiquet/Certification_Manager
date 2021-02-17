@@ -7,6 +7,7 @@ from server import app
 import pandas as pd
 from contents import carte, planning
 
+
 SIDEBAR_STYLE = {
     "position": "fixed",
     "top": 0,
@@ -51,23 +52,16 @@ sidebar = html.Div(
                     placement='right'
                 ),
                 html.Br(),
-                dbc.Button(id='produits', className="fas fa-flask"),
+                dbc.Button(id='stocks', className="fas fa-box-open"),
                 dbc.Tooltip(
-                    'Stocks produits',
-                    target="produits",
-                    placement='right'
-                ),
-                html.Br(),
-                dbc.Button(id='materiel', className="fas fa-hammer"),
-                dbc.Tooltip(
-                    'Matériel',
-                    target="materiel",
+                    'Gestion des stocks',
+                    target="stocks",
                     placement='right'
                 ),
                 html.Br(),
                 dbc.Button(id='ordre', className="fas fa-list-alt"),
                 dbc.Tooltip(
-                    'Ordre de travil',
+                    'Ordre de travail',
                     target="ordre",
                     placement='right'
                 ),
@@ -128,12 +122,11 @@ layout = html.Div([sidebar, content])
     Input('carte', 'n_clicks'),
     Input('parcelle', 'n_clicks'),
     Input('planning', 'n_clicks'),
-    Input('produits', 'n_clicks'),
-    Input('materiel', 'n_clicks'),
+    Input('stocks', 'n_clicks'),
     Input('ordre', 'n_clicks'),
     Input('synthese', 'n_clicks'),
     Input('parametres', 'n_clicks'))
-def displayClick(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8):
+def displayClick(btn1, btn2, btn3, btn4, btn5, btn6, btn7):
     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
     if 'carte' in changed_id:
         return carte.content
