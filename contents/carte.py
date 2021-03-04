@@ -4,7 +4,7 @@ import dash_bootstrap_components as dbc
 import dash_leaflet as dl
 import dash_leaflet.express as dlx
 import dash
-from dash_extensions.javascript import Namespace, arrow_function
+from dash_extensions.javascript import arrow_function
 from dash.dependencies import Output, Input, State
 from dash.exceptions import PreventUpdate
 
@@ -15,15 +15,13 @@ import pandas as pd
 url = "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
 attribution = '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> '
 
-ns = Namespace("dlx", "choropleth")
-
-
 def get_info(feature=None):
     header = [html.H4("Vignoble Jacquesson")]
     if not feature:
         return header + ["Passer la souris sur une parcelle"]
-    return header + [html.B(feature["properties"]["nom_parcelle"]) , html.Br(),
-                     feature["properties"]["nom_proprietaire"]]
+    return header + [html.B(feature["properties"]["propriétaire"]) , html.Br(),
+                     feature["properties"]["cépage"], html.Br(), feature["properties"]["annee plantation"], html.Br(),
+                     feature["properties"]["ld"]]
 
 collapse = html.Div(
     [
@@ -79,6 +77,10 @@ tabs = dbc.Card(
     ]
 )
 
+polyline = dl.Polyline(positions=[[0, 0]])
+patterns = [dict(offset='0', repeat='10', dash=dict(pixelSize=0))]
+test = dl.PolylineDecorator(id='polyline',children=polyline, patterns=patterns)
+
 content = html.Div(
     children=[
         dl.Map(
@@ -98,13 +100,13 @@ content = html.Div(
                         )
                     ),
                     zoomToBounds=True,
-                    # zoomToBoundsOnClick=True,
+                    zoomToBoundsOnClick=True,
                     hoverStyle=arrow_function(
                         dict(weight=4, color="#ADFF2F", dashArray="", fillOpacity=0.2)
                     ),
                     id="geojson",
                 ),
-                dl.Polyline(id="polyline", positions=[[0, 0]]),
+                test,
                 dl.Polygon(id="polygone", positions=[[0, 0]]),
                 info,
             ],
@@ -202,7 +204,7 @@ def enregistrer_parcelle(n_clicks1, nom_parcelle, nom_proprietaire, positions):
                     "properties": {"nom_parcelle": nom_parcelle, "nom_proprietaire" : nom_proprietaire},
                 }
                 geojson["features"] += [polygon]
-                with open("data/test.json", "w") as file:
+                with open("data/geojson.json", "w") as file:
                     json.dump(geojson, file)
                 return geojson, '', '',''
             else:

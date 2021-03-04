@@ -3,8 +3,8 @@ import dash_bootstrap_components as dbc
 import os
 from flask_login import LoginManager, UserMixin
 from flask_caching import Cache
-
-# from config_utilisateur import db, User as base
+from config import con
+from config_utilisateur import db, User as base
 
 FONT_AWESOME = "https://use.fontawesome.com/releases/v5.7.2/css/all.css"
 
@@ -13,6 +13,13 @@ app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP, FONT_AWESO
 server = app.server
 app.config.suppress_callback_exceptions = True
 
+# config
+# server.config.update(
+#     SECRET_KEY=os.urandom(12),
+#     SQLALCHEMY_DATABASE_URI=con,
+#     SQLALCHEMY_TRACK_MODIFICATIONS=False
+# )
+
 # db.init_app(server)
 
 # # Setup the LoginManager for the server
@@ -20,9 +27,9 @@ app.config.suppress_callback_exceptions = True
 # login_manager.init_app(server)
 # login_manager.login_view = "/"
 
-# # Create User class with UserMixin
-# class User(UserMixin, base):
-#     pass
+# Create User class with UserMixin
+class User(UserMixin, base):
+    pass
 
 # # callback to reload the user object
 # @login_manager.user_loader

@@ -5,7 +5,7 @@ import dash
 from dash.dependencies import Input, Output
 from server import app
 import pandas as pd
-from contents import carte, planning
+from contents import carte, parcelle, ordre, calendrier, stocks, synthese, parametres
 
 
 SIDEBAR_STYLE = {
@@ -36,17 +36,17 @@ sidebar = html.Div(
                 ),
                 dbc.Tooltip("Carte", target="carte", placement="right"),
                 html.Br(),
+                dbc.Button(id="ordre", className="fas fa-list-alt"),
+                dbc.Tooltip("Ordre de travail", target="ordre", placement="right"),
+                html.Br(),
                 dbc.Button(id="parcelle", className="fas fa-vector-square"),
                 dbc.Tooltip("Parcelles", target="parcelle", placement="right"),
                 html.Br(),
-                dbc.Button(id="planning", className="far fa-calendar-alt"),
-                dbc.Tooltip("Planning", target="planning", placement="right"),
+                dbc.Button(id="calendrier", className="far fa-calendar-alt"),
+                dbc.Tooltip("Calendrier", target="calendrier", placement="right"),
                 html.Br(),
                 dbc.Button(id="stocks", className="fas fa-box-open"),
                 dbc.Tooltip("Gestion des stocks", target="stocks", placement="right"),
-                html.Br(),
-                dbc.Button(id="ordre", className="fas fa-list-alt"),
-                dbc.Tooltip("Ordre de travail", target="ordre", placement="right"),
                 html.Br(),
                 dbc.Button(id="synthese", className="fas fa-chart-bar"),
                 dbc.Tooltip("Synthèse", target="synthese", placement="right"),
@@ -67,7 +67,7 @@ sidebar = html.Div(
                 dbc.Button(id="preferences", className="fas fa-user-cog"),
                 dbc.Tooltip("Préfèrences", target="preferences", placement="right"),
                 html.Br(),
-                dbc.Button(id="logout", className="fas fa-sign-out-alt"),
+                dbc.Button(id="logout", className="fas fa-sign-out-alt", href='/deconnexion'),
                 dbc.Tooltip("Déconnexion", target="logout", placement="right"),
             ],
             vertical=True,
@@ -86,9 +86,9 @@ layout = html.Div([sidebar, content])
     Output("content", "children"),
     Input("carte", "n_clicks"),
     Input("parcelle", "n_clicks"),
-    Input("planning", "n_clicks"),
-    Input("stocks", "n_clicks"),
     Input("ordre", "n_clicks"),
+    Input("calendrier", "n_clicks"),
+    Input("stocks", "n_clicks"),
     Input("synthese", "n_clicks"),
     Input("parametres", "n_clicks"),
 )
@@ -96,16 +96,17 @@ def displayClick(btn1, btn2, btn3, btn4, btn5, btn6, btn7):
     changed_id = [p["prop_id"] for p in dash.callback_context.triggered][0]
     if "carte" in changed_id:
         return carte.content
-    elif "planning" in changed_id:
-        return planning.content
-    elif "actions" in changed_id:
-        msg = "Button 3 was most recently clicked"
-        return html.Div(msg)
+    elif "parcelle" in changed_id:
+        return parcelle.content
+    elif "ordre" in changed_id:
+        return ordre.content
+    elif "calendrier" in changed_id:
+        return calendrier.content
     elif "stocks" in changed_id:
-        msg = "Button 4 was most recently clicked"
-        return html.Div(msg)
+        return stocks.content
+    elif "synthese" in changed_id:
+        return synthese.content
     elif "parametres" in changed_id:
-        msg = "Button 5 was most recently clicked"
-        return html.Div(msg)
+        return parametres.content
     else:
-        return carte.content
+        return ordre.content
